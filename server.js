@@ -9,10 +9,9 @@
 // WHEN I click on the Write icon in the navigation at the top of the page I am presented with empty fields to enter a new note title and the note’s text in the right-hand column
 const express = require("express");
 const path = require("path");
-const http = require("http");
 const fs = require("fs");
 
-const dbJson = require("./db/db.json");
+const db = require("./db/db.json");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -21,31 +20,42 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // HTML Routes
-module.exports = (app) => {
-  app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "public", "notes.html"));
+
+app.get("/notes", function (req, res) {
+    res.sendFile(path.join(__dirname, "public/notes.html"));
     console.log("/notes");
   });
-};
+
 
 //API routes
-module.exports = (app) => {
-    app.get("api/notes", function (req, res) {
-      return res.json();
-    }); //retrieve all notes and res.json them back to the front end//gets notes
-}
+
+app.get("/api/notes", function(req, res) {
+    res.json(db)
+    }); 
 
 
-app.post("api/notes", function (req, res) {}); //creates a note from req.body //saves notes
+
+app.post("/api/notes", function (req, res) {
+  const noteText = req.body
+  saveNoteBtn.push(noteText)
+  res.json(noteList)
+  console.log("saved");
+}); //creates a note from req.body //saves notes
 
 app.delete("/api/notes/:id", function (req, res) {
   // delete a note based of id //delete notes
   const { id } = req.params;
+  fs.readFile(__dirname, "/db/db/json", "utf8", function (err, data){
+    const notes = JSON.parse(data)
+    const newNotes = notes.filter((note) => note.id !== id);
+    res.json(notes)
+  })
 });
 
+
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "public", "notes.html"));
-  console.log("/notes");
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+
 });
 
 app.listen(PORT, () => console.log("app listening on port" + PORT));
