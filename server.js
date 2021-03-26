@@ -14,6 +14,7 @@ const fs = require("fs");
 const db = require("./db/db.json");
 const app = express();
 const PORT = process.env.PORT || 8080;
+const { v4: uuidv4 } = require('uuid');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -27,32 +28,32 @@ app.get("/notes", function (req, res) {
   });
 
 
-  fs.readFile("./db/db/json", "utf8", function (err, data){
-    if (err) throw err;
-//API routes
-    var notes = JSON.parse(data)
-
+  // fs.readFile("./db/db/json", "utf8", function (err, data){
+  //   if (err) throw err;
+  //   var notes = JSON.parse(data)
+    
+    //API routes
 app.get("/api/notes", function(req, res) {
-  res.json(notes{r})
-  res.json(db)
+  
+  fs.readFile("./db/db/json", "utf8", function (err, data){
+    res.json(parsedNotes)
 })
-
+});
 
 app.post("/api/notes", function (req, res) {
-   const newNote = req.body;
-   notes.push(newNote);
-   updateDb();
-   return console.log("Add new note" + newNote.title);
-
-    })
+   const newNote = req.body
+   newNote.id = uuidv4()
+   parsedNotes.push(newNote)
+   fs.writeFileSync("./db/db.json", JSON.stringify(parsedNotes));
+   res.json(parsedNotes);
   //creates a note from req.body //saves notes
+});
 
   app.delete("/api/notes/:id", function (req, res) {
     // delete a note based of id //delete notes
-    notes.splice("/api/notes/:id" + req.params.id);
-    updateDb();
-    console.log("Deleted note" + req.params.id);
-
+  fs.writeFileSync("./db/db.json", JSON.stringify(parsedNotes.filter((note) => note.id !== req.params.id)))
+  res.json()
+  });
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
@@ -60,5 +61,3 @@ app.get("*", function (req, res) {
 });
 
 app.listen(PORT, () => console.log("app listening on port" + PORT));
-
-}); 
