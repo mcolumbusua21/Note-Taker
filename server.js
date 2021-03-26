@@ -15,6 +15,7 @@ const db = require("./db/db.json");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const { v4: uuidv4 } = require('uuid');
+// const parsedNotes = ("parsed-notes")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,24 +35,24 @@ app.get("/notes", function (req, res) {
     
     //API routes
 app.get("/api/notes", function(req, res) {
-  
   fs.readFile("./db/db/json", "utf8", function (err, data){
-    res.json(parsedNotes)
+    // console.log(parsedNotes);
+    res.json(db)
 })
 });
 
 app.post("/api/notes", function (req, res) {
    const newNote = req.body
    newNote.id = uuidv4()
-   parsedNotes.push(newNote)
-   fs.writeFileSync("./db/db.json", JSON.stringify(parsedNotes));
-   res.json(parsedNotes);
+   db.push(newNote)
+   fs.writeFileSync("./db/db.json", JSON.stringify(db));
+   res.json(db);
   //creates a note from req.body //saves notes
 });
 
   app.delete("/api/notes/:id", function (req, res) {
     // delete a note based of id //delete notes
-  fs.writeFileSync("./db/db.json", JSON.stringify(parsedNotes.filter((note) => note.id !== req.params.id)))
+  fs.writeFileSync("./db/db.json", JSON.stringify(db.filter((note) => note.id !== req.params.id)))
   res.json()
   });
 
