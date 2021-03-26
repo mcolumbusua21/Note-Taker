@@ -27,48 +27,38 @@ app.get("/notes", function (req, res) {
   });
 
 
+  fs.readFile("./db/db/json", "utf8", function (err, data){
+    if (err) throw err;
 //API routes
+    var notes = JSON.parse(data)
 
 app.get("/api/notes", function(req, res) {
-    fs.readFile("./db/db/json", "utf8", function (err, data){
-      res.json(JSON.parse(data))
-    })
-  }); 
-  
-
+  res.json(notes{r})
+  res.json(db)
+})
 
 
 app.post("/api/notes", function (req, res) {
- fs.readFile("/db/db/json", "utf8", function(err, data){
-   if (err) throw err
-   const jsonFetch = JSON.parse(data);
-   const newNote = (id:db.length+1, title:req.body.title, text:req.body.text);
-   jsonFetch.push(newNote)
-   fs.writeFile("/db/db/json", JSON.stringify(jsonFetch), function(err, data){
-    if (err) throw err
-    res.end(data)
+   const newNote = req.body;
+   notes.push(newNote);
+   updateDb();
+   return console.log("Add new note" + newNote.title);
 
- })
-}); //creates a note from req.body //saves notes
-
-app.delete("/api/notes/:id", function (req, res) {
-  // delete a note based of id //delete notes
-  const { id } = req.params;
-  fs.readFile(__dirname, "/db/db/json", "utf8", function (err, data){
-    const notes = JSON.parse(data)
-    const newNotes = notes.filter((note) => note.id !== +id);
-    fs.writeFile(__dirname + "db/db/json", JSON.stringify(newNotes), function (err, newNotes){
-      if (err) throw err
-      res.end("deletes")
     })
-    res.json(newNotes)
-  })
-});
+  //creates a note from req.body //saves notes
+
+  app.delete("/api/notes/:id", function (req, res) {
+    // delete a note based of id //delete notes
+    notes.splice("/api/notes/:id" + req.params.id);
+    updateDb();
+    console.log("Deleted note" + req.params.id);
 
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
-
+  
 });
 
 app.listen(PORT, () => console.log("app listening on port" + PORT));
+
+}); 
