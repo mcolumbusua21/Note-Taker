@@ -30,16 +30,25 @@ app.get("/notes", function (req, res) {
 //API routes
 
 app.get("/api/notes", function(req, res) {
-    res.json(db)
-    }); 
+    fs.readFile("./db/db/json", "utf8", function (err, data){
+      res.json(JSON.parse(data))
+    })
+  }); 
+  
 
 
 
 app.post("/api/notes", function (req, res) {
-  const noteText = req.body
-  saveNoteBtn.push(noteText)
-  res.json(noteList)
-  console.log("saved");
+ fs.readFile("/db/db/json", "utf8", function(err, data){
+   if (err) throw err
+   const jsonFetch = JSON.parse(data);
+   const newNote = (id:db.length+1, title:req.body.title, text:req.body.text);
+   jsonFetch.push(newNote)
+   fs.writeFile("/db/db/json", JSON.stringify(jsonFetch), function(err, data){
+    if (err) throw err
+    res.end(data)
+
+ })
 }); //creates a note from req.body //saves notes
 
 app.delete("/api/notes/:id", function (req, res) {
@@ -47,8 +56,12 @@ app.delete("/api/notes/:id", function (req, res) {
   const { id } = req.params;
   fs.readFile(__dirname, "/db/db/json", "utf8", function (err, data){
     const notes = JSON.parse(data)
-    const newNotes = notes.filter((note) => note.id !== id);
-    res.json(notes)
+    const newNotes = notes.filter((note) => note.id !== +id);
+    fs.writeFile(__dirname + "db/db/json", JSON.stringify(newNotes), function (err, newNotes){
+      if (err) throw err
+      res.end("deletes")
+    })
+    res.json(newNotes)
   })
 });
 
