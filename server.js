@@ -53,7 +53,7 @@ app.post("/api/notes", function (req, res) {
   app.delete("/api/notes/:id", function (req, res) {
     // delete a note based of id //delete notes
   fs.writeFileSync("./db/db.json", JSON.stringify(db.filter((note) => note.id !== req.params.id)))
-  res.json()
+  res.send()
   });
 
 app.get("*", function (req, res) {
