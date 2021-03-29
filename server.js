@@ -25,7 +25,7 @@ app.use(express.static("public"));
 
 app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
-    console.log("/notes");
+    // console.log("/notes");
   });
 
 
@@ -35,7 +35,7 @@ app.get("/notes", function (req, res) {
     
     //API routes
 app.get("/api/notes", function(req, res) {
-  fs.readFile("./db/db/json", "utf8", function (err, data){
+  fs.readFile(".db/db.json", "utf8", function (err, data){
     // console.log(parsedNotes);
     res.json(db)
 })
@@ -53,7 +53,7 @@ app.post("/api/notes", function (req, res) {
   app.delete("/api/notes/:id", function (req, res) {
     // delete a note based of id //delete notes
   fs.writeFileSync("./db/db.json", JSON.stringify(db.filter((note) => note.id !== req.params.id)))
-  res.send()
+  res.send("success")
   });
 
 app.get("*", function (req, res) {
